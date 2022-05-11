@@ -1,22 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import {BarCodeScanner} from 'expo-barcode-scanner';
+import React, {useEffect, useState} from 'react';
+import {Button, StyleSheet, Text, View} from 'react-native';
 import {RootTabScreenProps} from "../types";
 
-export default function TabThreeScreen({ navigation }: RootTabScreenProps<'TabThree'>) {
+const ProductScreen = ({navigation, route}: RootTabScreenProps<'Product'>) => {
+  <View>
+
+  </View>
+}
+
+export default function TabThreeScreen({navigation}: RootTabScreenProps<'TabThree'>) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      const {status} = await BarCodeScanner.requestPermissionsAsync();
       // @ts-ignore
       setHasPermission(status === 'granted');
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }:{type: any, data: any}) => {
+  const handleBarCodeScanned = ({type, data}: { type: any, data: any }) => {
     setScanned(true);
+    navigation.navigate('ProductScreen', {barCode: data});
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
@@ -33,7 +40,7 @@ export default function TabThreeScreen({ navigation }: RootTabScreenProps<'TabTh
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
       />
-      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)}/>}
     </View>
   );
 }
