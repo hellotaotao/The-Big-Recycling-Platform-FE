@@ -12,21 +12,29 @@ const HomeScreen = ({navigation}: RootTabScreenProps<'Home'>) => (
     <Text>3. recycling icons...</Text>
 
     <TextInput style={styles.textInput} placeholder="Search"/>
-    <Button title={"Go!"} onPress={() => navigation.navigate("Details")}/>
+    <Button title={"Go!"} onPress={() => navigation.navigate("Details", {
+      itemId: 86,
+      otherParam: 'anything you want here',
+    })}/>
   </View>
 )
 
-const DetailsScreen = ({navigation}: RootTabScreenProps<'Details'>) => (
-  <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-    <Text>Details Screen</Text>
-    <Button
-      title="Go to Details... again"
-      onPress={() => navigation.push('Details')}
-    />
-    <Button title="Go to Home" onPress={() => navigation.navigate('Home')}/>
-    <Button title="Go back" onPress={() => navigation.goBack()}/>
-  </View>
-);
+const DetailsScreen = ({navigation, route}: RootTabScreenProps<'Details'>) => {
+  const {itemId, otherParam} = route.params;
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Details Screen</Text>
+      <Text>itemId: {JSON.stringify(itemId)}</Text>
+      <Text>otherParam: {JSON.stringify(otherParam)}</Text>
+      <Button
+        title="Go to Details... again"
+        onPress={() => navigation.push('Details')}
+      />
+      <Button title="Go to Home" onPress={() => navigation.navigate('Home')}/>
+      <Button title="Go back" onPress={() => navigation.goBack()}/>
+    </View>
+  )
+};
 
 
 const Stack = createNativeStackNavigator();
@@ -37,7 +45,6 @@ export default function TabOneScreen({navigation}: RootTabScreenProps<'TabOne'>)
       <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
       <Stack.Screen name="Details" component={DetailsScreen} options={{headerShown: false}}/>
     </Stack.Navigator>
-
   );
 }
 
@@ -46,13 +53,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#238358',
+    backgroundColor: '#cef5c6',
   },
   title: {
-    marginBottom: 20,
-    fontSize: 20,
+    marginBottom: 80,
+    fontSize: 30,
     fontWeight: 'bold',
-    color: 'yellow',
+    color: '#238358',
   },
   separator: {
     marginVertical: 30,
