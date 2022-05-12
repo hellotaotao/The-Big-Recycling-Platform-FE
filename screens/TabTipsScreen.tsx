@@ -1,8 +1,9 @@
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import * as WebBrowser from "expo-web-browser";
 import React, {useEffect} from 'react';
-import {Button, FlatList, SafeAreaView, StyleSheet, Text, View} from "react-native";
-import {Screen} from "react-native-screens";
+import {SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity} from "react-native";
 import config from '../config';
+import Colors from "../constants/Colors";
 import {RootTabScreenProps} from "../types";
 
 type TipType = {
@@ -11,57 +12,45 @@ type TipType = {
     title: string;
     content: object;
     featuredImage: string;
+    url: string;
   };
 }
-
-// const Item = ({route}: RootTabScreenProps<'Details'>) => {
-//   const {tip}: { tip: TipType } = route.params;
-//   return <View style={styles.item}>
-//     <Button title={tip.fields.title} onPress={() => navigation.navigate('Details', {tip: tip})}/>
-//   </View>
-// };
 
 function TipsListScreen({navigation}: RootTabScreenProps<'TabTips'>) {
   const [tips, setTips] = React.useState<TipType[]>();
   useEffect(() => {
-    console.log('fetching tips');
     fetch(config.cmsUrlBase + '/entries?access_token=' + config.cmsAccessToken + "&content_type=tips")
       .then(response => response.json())
       .then(
         (data) => {
-          console.log(data.items)
           setTips(data.items)
         });
   }, []);
 
-  // const renderItem = (item: any) => <Item route={item}/>;
-
 
   return (
-    <View style={styles.container}>
-      {tips && tips.map((tip, index) => {
-        // return <Text key={index}>{tip.fields.title}</Text>
-        return <Button title={tip.fields.title} onPress={() => navigation.navigate('Details', {tip: tip})}/>
-      })}
-    </View>
-    // <SafeAreaView style={styles.container}>
-    //   <FlatList data={tips} renderItem={renderItem} keyExtractor={item => item.title}/>
-    // </SafeAreaView>
+    <SafeAreaView style={styles.listView_container}>
+      <ScrollView>
+        {tips && tips.map((tip, index) => {
+          return (
+            <TouchableOpacity key={tip.fields.title + index} onPress={() => handleHelpPress(tip.fields.url)}
+                              style={styles.helpLink}>
+              <Text style={styles.helpLinkText} lightColor={Colors.light.tint}>
+                {tip.fields.title}
+              </Text>
+            </TouchableOpacity>
+          )
+        })}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
-function TipDetailsScreen({route, navigation}: RootTabScreenProps<'Details'>) {
-  const {tip}: { tip: TipType } = route.params;
-  console.log(tip);
-  return (
-    <View style={styles.container}>
-      <Button title={'< Back'} onPress={() => navigation.goBack()}/>
-
-      <Text>{tip.fields.content.toString()}</Text>
-    </View>
+function handleHelpPress(url: string) {
+  WebBrowser.openBrowserAsync(url
+    // 'https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet'
   );
 }
-
 
 const Stack = createNativeStackNavigator();
 
@@ -69,7 +58,7 @@ function TabTipsScreen() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={TipsListScreen} options={{headerShown: false}}/>
-      <Stack.Screen name="Details" component={TipDetailsScreen} options={{headerShown: false}}/>
+      {/*<Stack.Screen name="Details" component={TipDetailsScreen} options={{headerShown: false}}/>*/}
     </Stack.Navigator>
   );
 }
@@ -77,13 +66,18 @@ function TabTipsScreen() {
 export default TabTipsScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  listView_container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     backgroundColor: '#cef5c6',
   },
-  item: {fontSize: 18, marginTop: 4},
+  detailsView_container: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    backgroundColor: '#cef5c6',
+  },
   title: {
     marginBottom: 20,
     fontSize: 20,
@@ -102,5 +96,17 @@ const styles = StyleSheet.create({
     minWidth: "60%",
     backgroundColor: 'white',
     borderWidth: 1
+  },
+  helpLink: {
+    paddingVertical: 15,
+    borderBottomWidth: 2,
+    borderColor: 'lightgray',
+    width: "100%"
+  },
+  helpLinkText: {
+    textAlign: 'left',
+    marginLeft: 10,
+    marginRight: 10,
+    fontSize: 18,
   },
 });
