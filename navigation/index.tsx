@@ -91,19 +91,11 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoScreen}
-        options={{
-          title: 'Image Recognition',
-          tabBarIcon: ({color}) => <TabBarIcon name="camera" color={color}/>,
-        }}
-      />
-      <BottomTab.Screen
         name="TabThree"
         component={TabThreeScreen}
         options={{
-          title: 'Scan Barcode',
-          tabBarIcon: ({color}) => <TabBarIcon name="barcode" color={color}/>,
+          title: 'Camera',
+          tabBarIcon: ({color}) => <TabBarIcon name="camera" color={color}/>,
         }}
       />
       <BottomTab.Screen
