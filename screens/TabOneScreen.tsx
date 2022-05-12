@@ -5,7 +5,7 @@ import {RootTabScreenProps} from '../types';
 
 const HomeScreen = ({navigation}: RootTabScreenProps<'Home'>) => (
   <View style={styles.container}>
-    <Text style={styles.title}>Thg Big Recycling App</Text>
+    <Text style={styles.title}>The Big Recycling App</Text>
     <Text>You can search by: </Text>
     <Text>1. Name of the product</Text>
     <Text>2. Name of material </Text>
@@ -26,11 +26,6 @@ const DetailsScreen = ({navigation, route}: RootTabScreenProps<'Details'>) => {
       <Text>Details Screen</Text>
       <Text>itemId: {JSON.stringify(itemId)}</Text>
       <Text>otherParam: {JSON.stringify(otherParam)}</Text>
-      <Button
-        title="Go to Details... again"
-        onPress={() => navigation.push('Details')}
-      />
-      <Button title="Go to Home" onPress={() => navigation.navigate('Home')}/>
       <Button title="Go back" onPress={() => navigation.goBack()}/>
     </View>
   )
